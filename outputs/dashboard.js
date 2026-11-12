@@ -156,7 +156,7 @@ h3{font-size:13px;margin:4px 0 8px;text-transform:uppercase;letter-spacing:.04em
     CFG.SETUP_H = Math.max(0, Math.min(12, Number(SETTINGS.setupH)));
     if (!isFinite(CFG.SETUP_H)) CFG.SETUP_H = 8;
     [RECIPE_PCT, RECIPE_ORIG, RECIPE_MIX] = parseRecipe(SETTINGS.recipes);
-    CFG.ROUNDS = Number(SETTINGS.rounds) > 0 ? Number(SETTINGS.rounds) : (SETTINGS.variant === 'extended' ? 4 : 3);
+    CFG.ROUNDS = Number(SETTINGS.rounds) > 0 ? Number(SETTINGS.rounds) : (SETTINGS.variant === 'extended' ? 5 : 3);   // BIZ SIM CUP 2026 live game: 5 rounds
   }
   applySettings();
 
@@ -199,6 +199,8 @@ h3{font-size:13px;margin:4px 0 8px;text-transform:uppercase;letter-spacing:.04em
   let charts = [];
   // ---------- upgrade calculator (persistent: lives outside #erpsim-app so the 20 s refresh never resets what you type) ----------
   let calcCtx = {};
+  // SAP setup-time curve (Job Aid Extended: 8 h/€0, 7/50k, 6/125k, 5/250k, 4/500k, 3/1.25M; verified against Current_Game_Rules: €475k → 4.06897 h)
+  const setupAt = inv => 2 + 1500000 / (250000 + Math.max(0, Number(inv) || 0));
   const CALC_FIELDS = [
     ['margin', 'Margin €/unit', 0.01, 'auto'], ['sell', 'Extra output sold %', 1, 100], ['days', 'Days left in game', 1, 'auto'],
     ['sw', 'Product changes / round', 0.5, 'auto'], ['rate', 'Discount rate %', 0.1, 'auto'],
@@ -213,6 +215,8 @@ h3{font-size:13px;margin:4px 0 8px;text-transform:uppercase;letter-spacing:.04em
   }
   function updateCalc() {
     const box = document.getElementById('erpsim-calc'); if (!box) return;
+    // default "new hours" = SAP curve at (already invested + this cost), so diminishing returns are included
+    calcCtx.sTo = +Math.min(calcCtx.setupH ?? 8, setupAt((calcCtx.setupInv || 0) + (Number(calcVal('sCost')) || 0))).toFixed(2);
     if (!box.dataset.built) {
       box.dataset.built = '1';
       box.innerHTML = `<div class="card calc" style="margin-top:14px"><h2>Upgrade calculator: setup time reduction vs. capacity</h2>
@@ -231,7 +235,7 @@ h3{font-size:13px;margin:4px 0 8px;text-transform:uppercase;letter-spacing:.04em
     const sTo = Math.max(0, N(calcVal('sTo')));
     const opts = [];
     { const cost = N(calcVal('sCost')), units = sw * Math.max(0, from - sTo) * cap / 24 * sell, pr = units * margin;
-      opts.push({ name: `Setup ${from} h → ${sTo} h`, cost, units, pr, once: cost, note: `${sw.toFixed(1)} changes × ${(from - sTo).toFixed(1)} h × ${Math.round(cap / 24).toLocaleString('en-US')} units/h` }); }
+      opts.push({ name: `Setup ${+from.toFixed(2)} h → ${+sTo.toFixed(2)} h`, cost, units, pr, once: cost, note: `${sw.toFixed(1)} changes × ${Math.max(0, from - sTo).toFixed(2)} h × ${Math.round(cap / 24).toLocaleString('en-US')} units/h` }); }
     { const cost = N(calcVal('cCost')), add = N(calcVal('cAdd')), units = add * R * sell, pr = units * margin - N(calcVal('cDep'));
       opts.push({ name: `Capacity +${add.toLocaleString('en-US')}/day`, cost, units, pr, once: 0, note: `${add.toLocaleString('en-US')} × ${R} days, minus depreciation` }); }
     // final valuation = cumulative profit ÷ total game days × 240 (12 rounds) ÷ rate; extra profit only accrues on the days left
@@ -244,7 +248,7 @@ h3{font-size:13px;margin:4px 0 8px;text-transform:uppercase;letter-spacing:.04em
       opts.map(o => { const [t, c] = verdict(o); return `<tr class="${o === best ? 'best' : ''}"><td>${o.name}<div class="sub">${o.note}</div></td><td>${e0(o.cost)}</td>
         <td class="${o.dV < 0 ? 'neg' : 'pos'}">${eM(o.dV)}</td><td><b>${o.vRatio.toFixed(2)}×</b></td><td><span class="tag ${c}">${t}</span></td>
         <td>${Math.round(o.units).toLocaleString('en-US')}</td><td>${e0(o.pr)}</td><td>${isFinite(o.payback) ? o.payback.toFixed(1) + ' days' : 'never'}</td><td>${e0(o.back)}</td><td class="${o.net < 0 ? 'neg' : 'pos'}">${e0(o.net)}</td></tr>`; }).join('') +
-      `</tbody></table></div>${calcCtx.setupInv ? `<div class="note">Already invested in setup time reduction: <b>${e0(calcCtx.setupInv)}</b>. If you did, lower “Setup” in the header so the numbers start from the new value.</div>` : ''}`;
+      `</tbody></table></div>${calcCtx.setupInv ? `<div class="note">Already invested in setup time reduction: <b>${e0(calcCtx.setupInv)}</b> → ${setupAt(calcCtx.setupInv).toFixed(2)} h by the SAP curve (setup = 2 + 1,500,000 ÷ (250,000 + invested), never under 2 h). “Setup: new hours” defaults to the curve at invested + cost; “Setup” in the header follows SAP.</div>` : ''}`;
   }
   let dcChoice = null;  // in-memory channel choice (works even when localStorage is blocked)
   // Current_Game_Rules (OData) → market sizes, storage limits, overheads; capacity / setup only when SAP changes them
@@ -263,7 +267,9 @@ h3{font-size:13px;margin:4px 0 8px;text-transform:uppercase;letter-spacing:.04em
     let seen = {}; try { seen = JSON.parse(store.get('erpsim_rules_seen') || '{}'); } catch (e) {}
     let changed = false;
     if (cap && seen.cap !== cap) { SETTINGS.capacity = cap; seen.cap = cap; changed = true; }
-    if (setup != null && seen.setup !== setup) { SETTINGS.setupH = setup; seen.setup = setup; changed = true; }
+    // setup time: SAP reports the exact current value, so it always wins over a value typed in the header
+    const setupR = setup != null ? Math.round(setup * 100) / 100 : null;
+    if (setupR != null && Number(SETTINGS.setupH) !== setupR) { SETTINGS.setupH = setupR; seen.setup = setupR; changed = true; }
     const scen = (R[0] || {}).SCENARIO; if (scen && seen.scen !== scen) { SETTINGS.variant = /extended/i.test(scen) ? 'extended' : 'intro'; seen.scen = scen; changed = true; }
     if (changed) { store.set('erpsim_rules_seen', JSON.stringify(seen)); store.set('erpsim_cfg', JSON.stringify(SETTINGS)); applySettings(); syncInputs(); }
     if (oh) CFG.FIXED_MIN = oh / every / CFG.CAPACITY;
@@ -388,7 +394,7 @@ h3{font-size:13px;margin:4px 0 8px;text-transform:uppercase;letter-spacing:.04em
       calcCtx = Object.assign(calcCtx, {
         margin: q ? +((rs.reduce((a, r) => a + n(r.NET_VALUE) - n(r.COST), 0)) / q).toFixed(2) : (totQty ? +((totRev - totCost) / totQty).toFixed(2) : 1.5),
         days: Math.max(0, totalRounds * CFG.ROUND_DAYS - elapsed), rate: n(last.MARKET_RISK_RATE_PCT) + n(last.COMPANY_RISK_RATE_PCT) || 10,
-        sTo: Math.max(0, CFG.SETUP_H - 2), elapsed, cap: CFG.CAPACITY, setupH: CFG.SETUP_H, roundDays: CFG.ROUND_DAYS, setupInv: Math.abs(n(last.SETUP_TIME_INVESTMENT)),
+        elapsed, cap: CFG.CAPACITY, setupH: CFG.SETUP_H, roundDays: CFG.ROUND_DAYS, setupInv: Math.abs(n(last.SETUP_TIME_INVESTMENT)),
       });
       if (calcCtx.sw == null) calcCtx.sw = 3;
     }
@@ -445,7 +451,9 @@ h3{font-size:13px;margin:4px 0 8px;text-transform:uppercase;letter-spacing:.04em
       const queueEnd = openEnds.length ? Math.max(elapsed + queueQty / CAP, ...openEnds) : elapsed + queueQty / CAP;
       const queueDays = queueEnd - elapsed;
       const reserved = {}; for (const c in pending) { const rc = recipe(c); for (const m in rc) reserved[m] = (reserved[m] || 0) + rc[m] * pending[c]; }
-      const openPO = {}; for (const r of rows('Purchase_Orders')) if (!n(r.GOODS_RECEIPT_STEP)) { const m = code(r.MATERIAL_NUMBER); openPO[m] = (openPO[m] || 0) + n(r.QUANTITY); }
+      const openPO = {}; // open = not delivered yet. SAP fills the planned receipt date already when the order is created (STATUS "Expected"), so an order is open while that date is still ahead
+      const poOpen = r => /expected/i.test(r.STATUS || '') || !n(r.GOODS_RECEIPT_STEP) || (n(r.GOODS_RECEIPT_ROUND || r.SIM_ROUND) - 1) * CFG.ROUND_DAYS + n(r.GOODS_RECEIPT_STEP) > elapsed;
+      for (const r of rows('Purchase_Orders')) if (poOpen(r)) { const m = code(r.MATERIAL_NUMBER); openPO[m] = (openPO[m] || 0) + n(r.QUANTITY); }
 
       // demand model (all channels – production serves every DC): per DC, market size per team (€/week) / avg price × product mix
       const dem = {};
@@ -533,6 +541,43 @@ h3{font-size:13px;margin:4px 0 8px;text-transform:uppercase;letter-spacing:.04em
       if (below.length) alerts.push(['bad', `Price below unit cost: ${below.map(x => `${name(x.c)} (${eur(x.cur, 2)} < ${eur(x.uc, 2)})`).join(', ')}.`]);
       const cheap = P.filter(x => x.cur != null && x.ref && (x.cur - x.ref) / x.ref < -0.08 && x.s > 0);
       if (cheap.length) alerts.push(['warn', `More than 8 % under market while in stock: ${cheap.map(x => name(x.c)).join(', ')}.`]);
+
+      // ---- guard-rail alerts (all channels, independent of the channel filter) ----
+      // latest market period per product × channel (falls back to the whole data period), and our own sales there in the last 5 days
+      const lastK = rkAll[rkAll.length - 1], mktPD = {}, mkt5 = {}, ourPD5 = {}, pricePD = {};
+      for (const r of allMarket) { const c = mcode(r), k = c + '|' + dcOf(r), q = n(r.QUANTITY), v = n(r.NET_VALUE) || q * n(r.AVERAGE_PRICE); const a = mktPD[k] = mktPD[k] || { q: 0, v: 0, lq: 0, lv: 0 }; a.q += q; a.v += v; if (mKey(r) === lastK) { a.lq += q; a.lv += v; mkt5[c] = (mkt5[c] || 0) + q; } }
+      for (const r of allSales) if (n(r.SIM_ELAPSED_STEPS) > elapsed - 5) { const k = mcode(r) + '|' + dcOf(r); ourPD5[k] = (ourPD5[k] || 0) + n(r.QUANTITY); }
+      for (const r of allPrices) pricePD[code(r.MATERIAL_NUMBER) + '|' + dcOf(r)] = n(r.PRICE);
+      const mktRef = (c, dc) => { const a = mktPD[c + '|' + dc]; return !a ? null : a.lq ? a.lv / a.lq : a.q ? a.v / a.q : null; };
+      const gapsOf = x => dcs.filter(dc => sizeOk(dc, x.c)).map(dc => { const pr = pricePD[x.c + '|' + dc], ref = mktRef(x.c, dc); if (!(pr > 0) || !ref) return null;
+        let to = Math.round(ref * 0.97 * 20) / 20; if (x.uc != null) to = Math.max(to, Math.ceil(x.uc * 1.15 * 20) / 20);
+        return { dc, pr, ref, gap: (pr - ref) / ref, sold: ourPD5[x.c + '|' + dc] || 0, to }; }).filter(g => g && g.gap > 0.08);
+      const gapTxt = (g, withSold) => `DC${g.dc} ${eur(g.pr, 2)} vs. market ${eur(g.ref, 2)} (<b>+${(g.gap * 100).toFixed(0)} %</b>${withSold ? `, sold ${int(g.sold)} in 5 d` : ''}) → try ${eur(g.to, 2)}`;
+      // 1 · in stock but priced above the market
+      const over = P.filter(x => x.s >= 1000).map(x => ({ x, g: gapsOf(x) })).filter(o => o.g.length);
+      if (over.length) { const hard = over.some(o => o.g.some(g => g.gap > 0.15 || g.sold === 0));
+        alerts.push([hard ? 'bad' : 'warn', `<b>In stock but priced above the market (VK32, latest market period):</b> ${over.map(o => `${name(o.x.c)}, ${int(o.x.s)} in stock: ${o.g.map(g => gapTxt(g, true)).join('; ')}`).join(' · ')}. Stock that does not sell earns nothing.`]); }
+      // 2 · being produced, price not ready for the shelf yet
+      const pre = P.filter(x => x.s < 1000 && x.pend > 0).map(x => ({ x, g: gapsOf(x) })).filter(o => o.g.length);
+      if (pre.length) alerts.push(['warn', `<b>Set the price before the batch reaches the shelf (VK32):</b> ${pre.map(o => `${name(o.x.c)}, ${int(o.x.pend)} in production${o.x.nextArr != null ? `, ready ~${fd(o.x.nextArr)}` : ''}: ${o.g.map(g => gapTxt(g, false)).join('; ')}`).join(' · ')}.`]);
+      // 3 · raw materials: how long the line can keep running (queue + what the free wheat/oats still allow) vs. the supplier lead time
+      if (PHASE.purchasing) {
+        const dayOfPO = r => n(r.GOODS_RECEIPT_STEP) ? (n(r.GOODS_RECEIPT_ROUND || r.SIM_ROUND) - 1) * CFG.ROUND_DAYS + n(r.GOODS_RECEIPT_STEP) : null;
+        const coming = {}; for (const r of rows('Purchase_Orders')) { const d = dayOfPO(r); if (poOpen(r)) { const m = code(r.MATERIAL_NUMBER); (coming[m] = coming[m] || []).push({ q: n(r.QUANTITY), d }); } }
+        const base = ['R05', 'R06'].map(m => { const use = ALL_FG.map(c => recipe(c)[m] || 0).filter(u => u > 0); const avg = use.length ? use.reduce((t, u) => t + u, 0) / use.length : 0;
+          const free = Math.max(0, (stock[m] || 0) - (reserved[m] || 0)); return { m, free, days: avg ? free / (avg * CAP) : 99 }; }).sort((a, b) => a.days - b.days)[0];
+        const runEnd = Math.max(elapsed, queueEnd) + base.days, gameEnd = CFG.ROUNDS * CFG.ROUND_DAYS;
+        const flavOut = ['R01', 'R02', 'R03', 'R04'].filter(m => (stock[m] || 0) - (reserved[m] || 0) < 0.05 * CAP && !(coming[m] || []).length);
+        if (runEnd < gameEnd - 0.5 && runEnd - elapsed < CFG.LEAD_DAYS + 1) {
+          const inb = Object.keys(coming).sort().map(m => `${m} ${int(coming[m].reduce((t, o) => t + o.q, 0))}${coming[m].every(o => o.d != null) ? ` (day ${[...new Set(coming[m].map(o => o.d))].join('/')})` : ''}`);
+          const dayInRound = ((elapsed - 1) % CFG.ROUND_DAYS) + 1;
+          alerts.push([inb.length ? 'warn' : 'bad', `<b>Raw materials last only until about ${fd(Math.floor(runEnd * 10) / 10)}</b> (queue until ${fd(Math.ceil(queueEnd * 10) / 10)} + ~${base.days.toFixed(1)} d from free ${base.m}: ${int(base.free)} kg). Suppliers need 1–${CFG.LEAD_DAYS} days, so ${inb.length ? `check that the open orders arrive in time (${inb.join(', ')}) and order the rest` : '<b>order now: MD61 → MD01 → ME59N</b>'}.${dayInRound >= CFG.ROUND_DAYS - 4 && !endGame ? ' The round is ending: order before it ends, or the line stops at the start of the next round.' : ''}${flavOut.length ? ` No free stock and no open order for ${flavOut.join(', ')}.` : ''}`]);
+        }
+      }
+      // 4 · stock + queue of one product vs. what the market can absorb
+      const glut = P.map(x => { const m5 = mkt5[x.c] || 0, fair = m5 / 5 / Math.max(1, teams), rate = Math.max(recent[x.c] || 0, fair, 1); return { x, m5, rate, days: (x.s + x.pend) / rate }; })
+        .filter(o => o.x.s + o.x.pend >= 20000 && o.m5 > 0 && o.days > 8).sort((a, b) => b.days - a.days);
+      if (glut.length) alerts.push(['warn', `<b>More than the market can absorb, so do not release more of it (CO41):</b> ${glut.map(o => `${name(o.x.c)} ${int(o.x.s)} in stock${o.x.pend ? ` + ${int(o.x.pend)} in production` : ''} = <b>${o.days > 99 ? '99+' : o.days.toFixed(0)} days</b> at ${int(o.rate)}/day (all teams together sold ${int(o.m5)} in the last 5 days)`).join(' · ')}. Produce smaller batches of other products and sell this stock with price or marketing.`]);
       for (const [lbl, qty, lim, u] of storage) {
         if (qty > lim) alerts.push(['bad', `${lbl}: ${int(qty)} ${u} is over the ${int(lim)} storage limit, so extra storage is being charged. Sell or slow down production/purchasing.`]);
         else if (qty > 0.9 * lim) alerts.push(['warn', `${lbl}: ${int(qty)} ${u} = ${pct(qty / lim)} of the ${int(lim)} storage limit.`]);
@@ -558,7 +603,7 @@ h3{font-size:13px;margin:4px 0 8px;text-transform:uppercase;letter-spacing:.04em
       // ---- production ranking ----
       const rank = P.filter(x => x.marginProd > 0).sort((a, b) => b.score - a.score);
       const prodRows = rank.slice(0, 6).map((x, i) => `<tr><td>${i + 1}. ${name(x.c)}</td><td>${int(x.s)}</td><td>${int(x.pend)}</td><td>${int(x.exp)}</td>
-        <td class="${x.coverNow < 2 ? 'neg' : ''}">${x.coverNow > 99 ? '99+' : x.coverNow.toFixed(1)}</td><td>${x.s ? fd(x.outDay) : 'empty'}</td><td>${fd(x.nextArr)}</td><td>${eur(x.marginProd, 2)}</td>
+        <td class="${x.coverNow < 2 ? 'neg' : ''}">${x.coverNow > 99 ? '99+' : x.coverNow.toFixed(1)}</td><td>${x.s ? fd(x.outDay) : 'empty'}</td><td>${fd(x.nextArr)}</td><td>${eur(x.marginProd, 2)}</td><td class="${mkt5[x.c] && x.s + x.pend > mkt5[x.c] ? 'neg' : ''}">${mkt5[x.c] ? int(mkt5[x.c]) : '–'}</td>
         <td>${x.campaign} × ${int(CAP)}</td><td>${x.maxUnits >= CAP ? '<span class="tag good">OK</span>' : `<span class="tag bad">short ${x.short}</span>`}</td><td>${x.urgent ? '<span class="tag bad">urgent</span>' : ''}</td></tr>`).join('');
 
       // ---- prices (selected channel) ----
@@ -635,8 +680,8 @@ h3{font-size:13px;margin:4px 0 8px;text-transform:uppercase;letter-spacing:.04em
       return `<div class="card full reco"><h2>Live recommendations <span class="sub">· day ${elapsed} · prices &amp; marketing for ${dcName(DC)} · production &amp; purchasing for all channels · ~${teams} teams on the market · heuristics, verify before acting</span></h2>
         <ul class="alerts">${alerts.map(a => `<li class="${a[0]}">${a[1]}</li>`).join('')}</ul>
         <div class="grid">
-          <div><h3>What to produce next (CO41 order)</h3>${tbl(['Product', 'Stock', 'In queue', 'Exp. sales/day', 'Cover now (d)', 'Stock-out', 'Next batch', 'Margin/unit (all DCs)', 'Suggested run', 'Raw mat.', ''], prodRows)}
-            <div class="note">Products are ranked by margin (market price across all channels − unit cost) × expected demand, with a boost when the shelf empties before the next batch is ready. The ranking does not depend on the channel filter. Each product change costs ${CFG.SETUP_H} h of lost output (${int(CAP * CFG.SETUP_H / 24)} units), so prefer runs of 2–3 days of the same product.</div></div>
+          <div><h3>What to produce next (CO41 order)</h3>${tbl(['Product', 'Stock', 'In queue', 'Exp. sales/day', 'Cover now (d)', 'Stock-out', 'Next batch', 'Margin/unit (all DCs)', 'Market / 5 d', 'Suggested run', 'Raw mat.', ''], prodRows)}
+            <div class="note">Products are ranked by margin (market price across all channels − unit cost) × expected demand, with a boost when the shelf empties before the next batch is ready. The ranking does not depend on the channel filter. Each product change costs ${CFG.SETUP_H} h of lost output (${int(CAP * CFG.SETUP_H / 24)} units), so prefer runs of 2–3 days of the same product. “Market / 5 d” = units of that product all teams together sold in the latest market period (red when our stock + queue is already larger).</div></div>
           <div><h3>Prices (VK32) <button data-copy="${vkGrid.map(v => v.t).join('\n')}" title="${vkGrid.length} lines for VK32 (${vkGrid[0].c}…${vkGrid[vkGrid.length - 1].c}), one per SAP row. Products without a recommendation keep their current price; an empty line = no price known">Copy column (${vkGrid.length} rows)</button></h3>${tbl(['Product', 'Stock', 'Now', 'Recommended', 'Market', 'Cover', 'Action'], priceRows)}
             <div class="note">Prices for the selected channel. Stock = finished goods now (+ batches finishing within 2 days). The recommendation starts from that channel's market price and moves up when sellable stock is short (stock + batches finishing within 2 days under 3 days of sales) or down when there is too much (over 6 days). It never goes below unit cost × 1.15. Grocery chains buy 4 products per order, so keep the price level even across products.</div></div>
           <div><h3>Marketing signals (ZADS)</h3>${mk.length ? `<ul class="alerts">${mk.slice(0, 8).map(m => `<li class="${m[1]}">${m[2]}</li>`).join('')}</ul>` : '<div class="sub">No strong signal. Keep marketing low until there is spare stock.</div>'}
