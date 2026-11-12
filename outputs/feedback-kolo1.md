@@ -1,54 +1,204 @@
 # Feedback po kolách – ostrá hra (H6, Extended)
 
-Dáta zo SAP (OData klient 418). Posledná aktualizácia: po 3. kole (deň 60). Hra má 5 kôl a 10 tímov (A–J), my sme tím H. Poradie je z výsledkových tabuliek organizátora.
+Dáta zo SAP (OData klient 418). Posledná aktualizácia: po 4. kole (deň 80). Hra má 5 kôl a 10 tímov (A–J), my sme tím H. Poradie je z výsledkových tabuliek organizátora.
 
-Obsah: [Prehľad](#prehľad) · [Čo robiť v kole 4](#čo-robiť-v-kole-4) · [Kolo 3](#kolo-3) · [Kolo 2](#kolo-2) · [Kolo 1](#kolo-1)
+Obsah: [Prehľad](#prehľad) · [Čo robiť v kole 5](#čo-robiť-v-kole-5) · [Kolo 4](#kolo-4) · [Kolo 3](#kolo-3) · [Kolo 2](#kolo-2) · [Kolo 1](#kolo-1)
 
 ## Prehľad
 
-| Ukazovateľ | Kolo 1 | Kolo 2 | Kolo 3 |
-|---|---|---|---|
-| Valuácia na konci kola | €79,3M | €104,9M | **€155,8M** |
-| Zisk za kolo | €358k (po investícii €475k) | €1 301k | **€2 173k** |
-| Zisk kumulatívne | €358k | €1 659k | €3 832k |
-| Tržby | €1,70M | €2,28M | €3,41M |
-| Hrubá marža | €1,33M | €1,79M | €2,66M |
-| Predané | 253 000 ks | 311 000 ks | **540 000 ks** |
-| Priemerná cena | €6,73 | €7,32 | €6,32 |
-| Vyrobené | 377 000 ks (78 %) | 375 000 ks (78 %) | 439 000 ks (**91,5 %**) |
-| Sklad hotových výrobkov | 123 000 ks | 187 000 ks | 86 000 ks |
-| Podiel na trhu | 12,2 % | 10,8 % | **14,0 %** |
-| Marketing | €11 250 | €23 750 | €42 300 |
-| Rating / riziková prirážka | A / 5,00 % | A+ / 4,75 % | **AA+ / 3,75 %** |
-| Úver | €8,0M | €6,8M | €5,0M |
-| **Poradie (z 10)** | **2.** | **3.** | **2.** |
-| Líder (tím D) | €112,8M | €162,4M | €179,5M |
+| Ukazovateľ | Kolo 1 | Kolo 2 | Kolo 3 | Kolo 4 |
+|---|---|---|---|---|
+| Valuácia na konci kola | €79,3M | €104,9M | **€155,8M** | **€169,2M** |
+| Zisk za kolo | €358k (po investícii €475k) | €1 301k | **€2 173k** | €1 492k |
+| Zisk kumulatívne | €358k | €1 659k | €3 832k | €5 324k |
+| Tržby | €1,70M | €2,28M | €3,41M | €2,49M |
+| Hrubá marža | €1,33M | €1,79M | €2,66M | €1,93M |
+| Predané | 253 000 ks | 311 000 ks | **540 000 ks** | 382 000 ks |
+| Priemerná cena | €6,73 | €7,32 | €6,32 | €6,51 |
+| Vyrobené | 377 000 ks (78 %) | 375 000 ks (78 %) | 439 000 ks (**91,5 %**) | 425 000 ks (88,5 %) |
+| Sklad hotových výrobkov | 123 000 ks | 187 000 ks | 86 000 ks | 129 000 ks |
+| Podiel na trhu | 12,2 % | 10,8 % | **14,0 %** | 9,7 % |
+| Marketing | €11 250 | €23 750 | €42 300 | €38 300 |
+| Rating / riziková prirážka | A / 5,00 % | A+ / 4,75 % | **AA+ / 3,75 %** | **AAA+ / 3,00 %** |
+| Úver | €8,0M | €6,8M | €5,0M | €2,5M |
+| **Poradie (z 10)** | **2.** | **3.** | **2.** | **2.** |
+| Líder (tím D) | €112,8M | €162,4M | €179,5M | €229,4M |
 
-Po 3. kole sme druhí, na tím D strácame €23,7M. Zisk za kolo 3 sme však mali najvyšší zo všetkých (€2,17M, tím D €2,00M), takže sa sťahujeme. Tím A je tretí so €148,8M, len €7M za nami.
+Po 4. kole sme stále druhí, ale strata na tím D narástla z €23,7M na €60M. Zisk za kolo 4 (€1,49M) bol až štvrtý najvyšší: tím D €2,99M, tím C €1,95M, tím I €1,54M. Tretí je tím A (€143,1M), štvrtý tím C (€139,0M).
 
-## Čo robiť v kole 4
+## Čo robiť v kole 5
 
-Ostávajú 2 kolá (dni 61–100). Pri ratingu AA+ pridá každých €100k zisku navyše v kolách 4–5 asi **€2,2M valuácie**. Rozhoduje teda objem a marža každý deň, nie jednorazové akcie.
+Posledné kolo (dni 81–100). Do valuácie sa počíta len zisk zaúčtovaný do 100. dňa, sklad na konci nemá žiadnu hodnotu. Pri ratingu AAA+ pridá každých €100k zisku **€2,4M valuácie**.
 
-1. **Hneď opraviť ceny (VK32)** podľa trhu z kola 3:
+| Zisk v kole 5 | Valuácia po 100. dni (AAA+) | Pri páde ratingu na AA+ |
+|---|---|---|
+| €1,5M (ako kolo 4) | ~€170M | ~€159M |
+| €2,2M (ako kolo 3) | ~€187M | ~€174M |
+| €2,6M | ~€197M | ~€183M |
+| €3,0M | ~€206M | ~€192M |
 
-   | Produkt | Sklad / vo výrobe | Naša cena | Trh kolo 3 | Odporúčanie (východisko) |
+**Cieľ: predať ~500 000 ks** (129 000 zo skladu + ~370 000 z výroby do 97. dňa), teda 25 000 ks denne. V kole 3 sme zvládli 27 000 denne, v kole 4 len 19 000.
+
+### Deň 81, ešte pred prvým krokom
+
+1. **Ceny (VK32).** Na sklade je 129 000 ks a posledné 2 dni sa nepredal ani kus. Trh = dni 76–80.
+
+   | Produkt | Sklad | Naša cena DC10 / DC12 / DC14 | Trh dni 76–80 | Nastaviť (východisko) |
    |---|---|---|---|---|
-   | F14 1kg Raisin | 8 327 (od kola 1, predaných 0) | DC10 €11,00 · DC12 €10,00 | €6,34 · €6,45 | **€6,30 · €6,40** |
-   | F12 1kg Blueberry | 22 620 + 25 380 vo výrobe | DC10 €6,70 · DC12 €6,70 | €7,11 · €7,91 | zdvihnúť na ~€7,05 · €7,80 |
-   | F02 500g Blueberry | 6 859 + 24 000 vo výrobe | DC12 €5,90 · DC14 €6,50 | €6,46 · €6,88 | ~€6,40 · €6,85 |
-   | F03 500g Strawberry | 16 252 + 24 000 vo výrobe | DC12 €5,90 · DC14 €7,00 | €6,65 · €6,81 | DC12 ~€6,50, DC14 ~€6,80 |
-   | F15 1kg Original | 11 985 | DC10 €5,30 · DC12 €6,15 | €5,68 · €5,21 | ~€5,60 · €5,20 |
-   | F16 1kg Mixed | 1 674 | DC10 €7,30 · DC12 €8,50 | €8,26 · €8,84 | DC10 zdvihnúť na ~€8,10 |
-   | F06 500g Mixed | 0 | DC12 €9,70 · DC14 €10,15 | €5,41 · €6,11 | nastaviť pred výrobou na ~€5,40 · €6,10 |
+   | F16 1kg Mixed | 24 601 | €8,00 / **€9,35** / – | €8,00 / €8,08 | €7,80 / **€8,00** |
+   | F01 500g Nut | 24 000 | – / **€6,30** / €6,00 | – / €5,48 / €5,83 | DC12 **€5,50**, DC14 €5,80 |
+   | F14 1kg Raisin | 21 402 | **€6,70** / €6,50 / – | €5,63 / €6,33 | **€5,60** / €6,30 |
+   | F13 1kg Strawberry | 21 371 | €5,70 / **€8,50** / – | €6,58 / €7,44 | €6,25 / **€7,40** |
+   | F11 1kg Nut | 20 394 (+15 552 vo výrobe) | **€7,35** / €8,00 / – | €5,55 / €6,32 | **€5,70** / €7,20 |
+   | F12 1kg Blueberry | 12 439 | €5,88 / **€8,50** / – | €6,62 / €7,12 | €6,30 / **€7,30** |
+   | F02 500g Blueberry | 1 688 (+72 000 vo fronte) | – / €5,70 / €6,15 | – / €5,58 / €5,74 | DC12 €5,60, DC14 **€5,75** |
+   | F03 500g Strawberry | 2 958 (+24 000 vo fronte) | – / €6,00 / €6,20 | – / €6,16 / €6,00 | DC12 €6,10, DC14 €6,00 |
 
-2. **F14 vyrábať.** V kole 3 bol F14 najväčší 1kg trh (418 000 ks za €6,3–6,5), my sme nepredali nič, lebo cena ostala od kola 1 na €11 / €10. Pri odhadovanom náklade ~€1,5/ks (podobne ako F15) je marža ~€4,8/ks. Najprv predať 8 327 ks zo skladu za trhovú cenu, potom dávka 24 000–48 000 ks.
-3. **F01 znova vyrábať pre DC14.** Celý sklad (48 262 ks) sa v kole 3 predal. V DC14 sme dostali €6,04 pri trhu €5,65 a trh DC14 kúpil 275 000 ks. Teraz nemáme ani kus.
-4. **DC10 skontrolovať každý deň.** V DC10 sme predali len 39 780 ks (podiel 7 %) a dni 41–54 vôbec nič, hoci sme mali 1kg na sklade. Predávať sa začalo až 55. dňa. Trh DC10 je €4,0M, pri priemernom podiele (10 % pri 10 tímoch) by to bolo ~€120k tržieb navyše a pri podiele ako v DC12 (18 %) ~€440k.
-5. **500g držať pre DC14 a ceny v DC12 nenastavovať pod DC14.** F03 sa predal 84 783 ks v DC12 za €5,90 a len 4 073 ks v DC14, kde trh platil €6,81. Rovnaká chyba ako v kole 1.
-6. **Suroviny:** otvorené objednávky prídu 61. deň (R05 8 200 kg, R06 22 200 kg, R01 4 920 kg, R04 4 240 kg, P03 a P04 po 130 000 ks). Jahody (R03) po rozrobenom F03 skončia na nule a orechy (R01) stačia len na malú dávku F01. Ak sa ide do F01 a F14, objednať R01 a R04 hneď, podľa sekcie Purchasing v dashboarde.
-7. **Linka ide naplno, takto pokračovať.** V kole 3 bola vyťažená na 91,5 % a nestála ani na začiatku kola. Rovnaký produkt nevyrábať v dvoch dávkach krátko po sebe (F02, F03 a F04 boli v kole 3 každý dvakrát).
-8. **Koniec hry (kolo 5):** od ~15. dňa kola 5 už nevyrábať nič, čo sa do 100. dňa nepredá, posledný nákup surovín okolo 10.–12. dňa a ceny nastaviť tak, aby sklad skončil blízko nuly.
+   - F11 v DC12 sa v dňoch 75–78 predával aj za €8,00 (14 000 ks), preto ho nezlacňujem až na trh. Ak sa 2 dni nepredá, ísť na €6,50.
+   - F12 leží 11 dní (od 70. dňa) na 12 439 ks. Predával sa za €7,50–8,00, potom cena stúpla na €8,50.
+   - F16 sa predával za €7,70–8,00, cena je teraz späť na €9,35.
+2. **DC10 rozbehnúť.** V kole 4 sme tam predali 10 289 ks (podiel 1,7 %), v jediný deň (68.). Trh DC10 je €4,0M za kolo. Pri priemernom podiele 10 % je to ~€330k tržieb, ~€250k zisku a **~€6M valuácie** navyše. Nastaviť ceny DC10 podľa tabuľky (trh −3 až −5 %) a na 82. a 83. deň skontrolovať. Ak sa nič nepredá, ďalších −5 %.
+3. **Suroviny objednať raz, hneď.** Otvorené objednávky nie sú žiadne. Zásoba po odrátaní fronty stačí na ~144 000 ks (pšenica 21 600 kg, ovos 64 800 kg, obaly 1kg 96 000, 500g 72 000). S frontou vyrába linka asi do 92. dňa. Na dni 92–97 doobjednať materiál na ~120 000 ks podľa sekcie Purchasing. **Po 90. dni už nič neobjednávať.**
+
+### Výroba
+
+- **Posledná dávka musí byť hotová do 97. dňa.** Čo sa vyrobí v dňoch 98–100, sa už nestihne predať.
+- **Dávky po 48 000 ks, každý produkt len raz.** V kole 4 bolo 14 prestavieb (F11 trikrát, F14 a F16 dvakrát), stáli ~55 000 ks.
+- Východiskové poradie, upraviť podľa predaja:
+
+  | Dni | Produkt | Ks | Poznámka |
+  |---|---|---|---|
+  | 81 | F11 (dokončenie) | 15 552 | už beží |
+  | 81–84 | F02 | 72 000 | vo fronte, najväčší trh (848 000 ks za kolo) |
+  | 84–86 | F03 | 48 000 | 24 000 vo fronte, rozšíriť (jahody stačia na 72 000) |
+  | 86–88 | F04 | 48 000 | od 65. dňa nemáme, hrozienka stačia presne na 48 000 |
+  | 88–90 | 1kg, ktorý má sklad pod 3 dni predaja | 48 000 | rozhodnúť 87. deň |
+  | 90–93 | F02 | 48 000 | čučoriedky stačia na 53 000 |
+  | 93–97 | to, čo sa v dňoch 88–92 predávalo najrýchlejšie | do 72 000 | posledná dávka |
+
+- **1kg nevyrábať, kým leží.** F11, F12, F13, F14 a F16 majú každý 12 000–36 000 ks na sklade.
+
+### Predaj počas kola
+
+- **Kontrola každý deň, nie každých 5 dní.** Produkt so skladom nad 5 000 ks, ktorý sa 2 dni nepredal: −5 % v danom kanáli. Karta *Live recommendations* to ukazuje ako prvé upozornenie.
+- **Po zmene ceny nahor skontrolovať predaj na druhý deň.** V kole 4 po zdvihnutí cien (F12 z €7,50 na €9,00) nasledovali dva dni bez predaja.
+- **500g zlacniť skôr.** F02 stál v DC14 €6,50, kým trh klesol na €5,67, a sklad narástol na 74 000 ks. Po znížení na €5,40–5,60 sa predalo 25 000 ks za deň.
+- **Dni 91–95:** ceny na trh −5 %. Všetky tímy budú vypredávať, trhové ceny klesali už na konci kola 4 (F11 v DC12 z €7,84 na €6,32).
+- **Dni 96–100:** každý deň −5 až −10 % na všetko, čo ostáva. Spodná hranica je ~€3,50 (výrobný náklad je ~€1,45/ks, všetko nad tým je zisk).
+- **Marketing:** v kole 4 €38 300, najviac zo všetkých tímov v pomere k tržbám (1,2 %). Tímy D a A dávajú takmer nulu. Držať najviac €1 500 denne len na produkty so skladom a od 96. dňa vypnúť.
+
+### Financie
+
+- **Rating AAA+ musí vydržať do 100. dňa.** Rozdiel oproti AA+ je ~€13M valuácie. Rating padol späť, keď debt loading klesol pod asi −€1,0M (dni 70–73). Teraz je −€0,37M.
+- Debt loading zhoršujú nákupy surovín a dni bez predaja. Preto jeden nákup na začiatku a žiadny po 90. dni.
+- Splácanie úveru rating nemení. Splácať len z hotovosti nad ~€0,5M.
+- Žiadna investícia do prestavby.
+
+### Poradie
+
+- **Tím D (€229M) nedobehneme.** V kole 4 zarobil €3,0M a predáva takmer dvojnásobok našich tržieb (€4,59M za kolo).
+- **Druhé miesto ohrozuje tím C** (€139M, AAA+, zisk kola 4 €1,95M a rastie). Pri našom zisku €1,5M by mu na predbehnutie stačilo ~€2,5M. Pri €2,2M sme bezpečne druhí.
+
+## Kolo 4
+
+### Výsledok
+
+Zisk za kolo klesol na €1,49M (kolo 3 €2,17M), valuácia stúpla len na **€169,2M** (+9 %). Druhé miesto sme udržali, tím D sa vzdialil na €60M.
+
+```
+deň 80: ((€5 324k + €475k) ÷ 80 × 240 − €475k) ÷ (7 % + 3 %) = €169,2M   (sedí so SAP)
+```
+
+- **Predali sme 382 000 ks, o 158 000 menej ako v kole 3.** Pri marži ~€5/ks je to presne rozdiel v zisku.
+- **Vyrobili sme 425 000 ks,** sklad narástol z 86 000 na 129 000 ks.
+- **Podiel na trhu klesol zo 14,0 % na 9,7 %.** Trh pritom mierne narástol (€24,5M → €25,5M).
+- **Valuáciu podržal rating:** AA+ → AAA+ (od 74. dňa), prirážka 3,75 % → 3,00 %. Bez toho by bola €157M.
+- Najvyššie bola valuácia €177,3M (78. deň). Posledné dva dni bez predaja a platba réžie ju stiahli o €8M.
+
+### Ako dopadli odporúčania po kole 3
+
+| Odporúčanie | Výsledok |
+|---|---|
+| F14 zlacniť a vyrábať | ✅ Prvýkrát sa predal: 34 925 ks, marža €179k. Vyrobených 48 000 ks. |
+| F01 pre DC14 | ❌ Vyrobený až 78.–79. deň, predaných 0. Trh DC14 medzitým kúpil 137 000 ks. |
+| DC10 kontrolovať každý deň | ❌ 10 289 ks za celé kolo (podiel 1,7 %, kolo 3 7,0 %). |
+| 500g držať pre DC14 | ✅ DC14: 103 000 ks, podiel 9,9 %. Ceny v DC14 už nie sú vyššie ako v DC12. |
+| Linka naplno, produkt nie dvakrát | ⚠️ 88,5 %, linka nestála. F11 však trikrát, F14, F16, F02 a F03 dvakrát. |
+| Opraviť ceny podľa trhu | ⚠️ Opravené, ale s oneskorením a niektoré sa vrátili nahor (F16 €9,35, F12 €8,50). |
+
+### Kde ostali peniaze
+
+| Problém | Čo sa stalo | Odhad straty zisku |
+|---|---|---|
+| DC10 | 10 289 ks z trhu 611 000 ks. Pri priemernom podiele by to bolo ~61 000 ks. | ~€250k |
+| Dni bez predaja | Dni 62, 63, 71, 79 a 80 nič. V DC12 nič ani v dňoch 68, 70, 72 a 73. | ~€300k |
+| 500g zlacnené neskoro | F02 a F03 sa hromadili do 73. dňa (74 000 a 52 000 ks), vypredali sa až v dňoch 75–78. | časť z vyššieho |
+| Sklad na konci | 129 000 ks nepredaných, z toho F12 12 439 ks leží od 70. dňa. | presúva sa do kola 5 |
+| Prestavby | 14 zmien produktu, ~55 000 ks. | ~€80k, ak by sa predali |
+
+Históriu cien OData nemá, príčiny výpadkov odvodzujem z cien, za ktoré sa predávalo. Prečo sa nepredávalo v DC10, z dát určiť neviem (aktuálne ceny F12 a F13 sú tam pod trhom). Treba overiť hneď 81.–83. deň.
+
+### Predaj po produktoch
+
+| Produkt | Vyrobené | Predané | Naša cena | Trh (ks · cena) | Hrubá marža | Sklad na konci |
+|---|---|---|---|---|---|---|
+| F03 500g Strawberry | 96 000 | 109 294 | DC12 €5,97 · DC14 €6,02 | DC12 328k · €6,22 · DC14 221k · €6,31 | €519k | 2 958 |
+| F02 500g Blueberry | 103 000 | 108 171 | DC12 €5,64 · DC14 €5,96 | DC12 414k · €5,77 · DC14 434k · €5,89 | €498k | 1 688 |
+| F11 1kg Nut | 56 448 | 40 088 | DC12 €7,71 | DC10 166k · €6,63 · DC12 325k · €7,13 | €244k | 20 394 |
+| F12 1kg Blueberry | 25 380 | 35 561 | DC10 €7,60 · DC12 €7,90 | DC10 129k · €6,97 · DC12 313k · €7,35 | €200k | 12 439 |
+| F14 1kg Raisin | 48 000 | 34 925 | DC10 €6,10 · DC12 €6,61 | DC10 110k · €5,92 · DC12 248k · €6,47 | €179k | 21 402 |
+| F16 1kg Mixed | 48 000 | 25 073 | DC12 €7,88 | DC10 47k · €7,20 · DC12 109k · €8,40 | €146k | 24 601 |
+| F15 1kg Original | 0 | 11 985 | DC12 €6,15 | DC10 59k · €4,54 · DC12 97k · €5,85 | €57k | 0 |
+| F04 500g Raisin | 0 | 11 338 | €5,25 | DC12 89k · €5,07 · DC14 172k · €5,25 | €50k | 0 |
+| F13 1kg Strawberry | 24 000 | 5 751 | DC12 €9,48 | DC10 102k · €7,28 · DC12 181k · €6,89 | €41k | 21 371 |
+| F01 500g Nut | 24 000 | **0** | – | DC12 136k · €5,26 · DC14 137k · €5,68 | €0 | 24 000 |
+
+- **F13:** v DC12 stál €10,30 pri trhu €9,0–9,2, od 75. dňa trh spadol na €5,74 a my sme 24 000 ks priniesli na sklad za €8,50.
+- **F04:** vypredaný od 65. dňa, hoci trh kúpil 261 000 ks. Nevyrábal sa.
+
+### Podiel na trhu
+
+| Kanál | Trh | Naše tržby | Náš podiel | Kolo 3 |
+|---|---|---|---|---|
+| DC10 | €3,99M | €67k | **1,7 %** | 7,0 % |
+| DC12 | €15,35M | €1 805k | **11,8 %** | 18,0 % |
+| DC14 | €6,19M | €614k | **9,9 %** | 9,1 % |
+| **Spolu** | €25,53M | €2,49M | **9,7 %** | 14,0 % |
+
+### Predaj po dňoch
+
+| Dni | Predané za deň | Poznámka |
+|---|---|---|
+| 61 | 32 900 | |
+| 62–63 | **0** | po zdvihnutí cien (F12 €7,50 → €9,00, F03 €5,90 → €6,20) |
+| 64–67 | 13 500–56 000 | 66. deň najlepší (F03 25 600 ks za €6,10) |
+| 68–73 | 0–36 800, tri dni pod 6 000 | sklad F02 rástol na 74 000 ks, F16 24 000 ks bez predaja za €9,35 |
+| 74–78 | 27 000–56 000 | po znížení cien 500g a F16 |
+| 79–80 | **0** | sklad 129 000 ks |
+
+### Výroba
+
+- 424 828 ks, **88,5 % kapacity**. Linka nestála, celá strata sú prestavby.
+- Dávky: F12 25 380 · F03 24 000 · F02 24 000 · F14 24 000 · F11 24 000 · F16 24 000 · F02 79 000 · F03 72 000 · F11 24 000 · F13 24 000 · F14 24 000 · F01 24 000 · F16 24 000 · F11 (rozrobená, 8 448 z 24 000).
+- Vo fronte: F11 15 552, F02 72 000, F03 24 000 ks.
+
+### Financie
+
+| | Deň 60 | Deň 80 |
+|---|---|---|
+| Hotovosť | €1,26M | €1,39M |
+| Pohľadávky | €2,47M | €1,49M |
+| Úver | €5,0M | €2,5M |
+| Záväzky voči dodávateľom | €0,61M | €0,75M |
+| Debt loading | −€1,89M | −€0,37M |
+| Rating / prirážka | AA+ / 3,75 % | **AAA+ / 3,00 %** |
+
+- Úver splatený o €2,5M, úroky €20k za kolo.
+- Fixné náklady kola sú ~€560k (prevádzka €345k, SG&A €160k, marketing €38k, úroky €20k). Všetko nad to je marža z predaja.
+
+### Zhrnutie kola 4
+
+Vyrábali sme rovnako ako v kole 3, ale predali o 158 000 ks menej. Ceny sa opravovali s oneskorením a DC10 sme takmer nepredávali. V kole 5 rozhodne denná kontrola predaja a vypredanie skladu do 100. dňa.
 
 ## Kolo 3
 
@@ -165,6 +315,30 @@ Príčina výpadkov v dňoch 46 a 52–53 sa z dát nedá určiť (sklad aj ceny
 - Úver splatený o €1,8M. Úroky stáli €36k za kolo.
 - Náklady kola: COGS €751k, prevádzkové náklady €345k, SG&A €160k, marketing €43k.
 - Ďalší stupeň ratingu (AAA) by pridal približne 2 % valuácie. Prichádza sám so ziskom, splácaním úveru sa nedá urýchliť.
+
+### Čo sme si po kole 3 odporučili na kolo 4
+
+Ostávajú 2 kolá (dni 61–100). Pri ratingu AA+ pridá každých €100k zisku navyše v kolách 4–5 asi **€2,2M valuácie**. Rozhoduje teda objem a marža každý deň, nie jednorazové akcie.
+
+1. **Hneď opraviť ceny (VK32)** podľa trhu z kola 3:
+
+   | Produkt | Sklad / vo výrobe | Naša cena | Trh kolo 3 | Odporúčanie (východisko) |
+   |---|---|---|---|---|
+   | F14 1kg Raisin | 8 327 (od kola 1, predaných 0) | DC10 €11,00 · DC12 €10,00 | €6,34 · €6,45 | **€6,30 · €6,40** |
+   | F12 1kg Blueberry | 22 620 + 25 380 vo výrobe | DC10 €6,70 · DC12 €6,70 | €7,11 · €7,91 | zdvihnúť na ~€7,05 · €7,80 |
+   | F02 500g Blueberry | 6 859 + 24 000 vo výrobe | DC12 €5,90 · DC14 €6,50 | €6,46 · €6,88 | ~€6,40 · €6,85 |
+   | F03 500g Strawberry | 16 252 + 24 000 vo výrobe | DC12 €5,90 · DC14 €7,00 | €6,65 · €6,81 | DC12 ~€6,50, DC14 ~€6,80 |
+   | F15 1kg Original | 11 985 | DC10 €5,30 · DC12 €6,15 | €5,68 · €5,21 | ~€5,60 · €5,20 |
+   | F16 1kg Mixed | 1 674 | DC10 €7,30 · DC12 €8,50 | €8,26 · €8,84 | DC10 zdvihnúť na ~€8,10 |
+   | F06 500g Mixed | 0 | DC12 €9,70 · DC14 €10,15 | €5,41 · €6,11 | nastaviť pred výrobou na ~€5,40 · €6,10 |
+
+2. **F14 vyrábať.** V kole 3 bol F14 najväčší 1kg trh (418 000 ks za €6,3–6,5), my sme nepredali nič, lebo cena ostala od kola 1 na €11 / €10. Pri odhadovanom náklade ~€1,5/ks (podobne ako F15) je marža ~€4,8/ks. Najprv predať 8 327 ks zo skladu za trhovú cenu, potom dávka 24 000–48 000 ks.
+3. **F01 znova vyrábať pre DC14.** Celý sklad (48 262 ks) sa v kole 3 predal. V DC14 sme dostali €6,04 pri trhu €5,65 a trh DC14 kúpil 275 000 ks. Teraz nemáme ani kus.
+4. **DC10 skontrolovať každý deň.** V DC10 sme predali len 39 780 ks (podiel 7 %) a dni 41–54 vôbec nič, hoci sme mali 1kg na sklade. Predávať sa začalo až 55. dňa. Trh DC10 je €4,0M, pri priemernom podiele (10 % pri 10 tímoch) by to bolo ~€120k tržieb navyše a pri podiele ako v DC12 (18 %) ~€440k.
+5. **500g držať pre DC14 a ceny v DC12 nenastavovať pod DC14.** F03 sa predal 84 783 ks v DC12 za €5,90 a len 4 073 ks v DC14, kde trh platil €6,81. Rovnaká chyba ako v kole 1.
+6. **Suroviny:** otvorené objednávky prídu 61. deň (R05 8 200 kg, R06 22 200 kg, R01 4 920 kg, R04 4 240 kg, P03 a P04 po 130 000 ks). Jahody (R03) po rozrobenom F03 skončia na nule a orechy (R01) stačia len na malú dávku F01. Ak sa ide do F01 a F14, objednať R01 a R04 hneď, podľa sekcie Purchasing v dashboarde.
+7. **Linka ide naplno, takto pokračovať.** V kole 3 bola vyťažená na 91,5 % a nestála ani na začiatku kola. Rovnaký produkt nevyrábať v dvoch dávkach krátko po sebe (F02, F03 a F04 boli v kole 3 každý dvakrát).
+8. **Koniec hry (kolo 5):** od ~15. dňa kola 5 už nevyrábať nič, čo sa do 100. dňa nepredá, posledný nákup surovín okolo 10.–12. dňa a ceny nastaviť tak, aby sklad skončil blízko nuly.
 
 ### Zhrnutie kola 3
 
