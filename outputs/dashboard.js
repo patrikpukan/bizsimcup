@@ -107,7 +107,7 @@ h3{font-size:13px;margin:4px 0 8px;text-transform:uppercase;letter-spacing:.04em
 .reco .grid>div:first-child{grid-column:1/-1}
 .alerts{list-style:none;margin:0 0 12px;padding:0;display:grid;gap:6px}
 .alerts li{padding:7px 10px;border-radius:8px;font-size:13px;border-left:4px solid var(--muted);background:var(--bg)}
-.alerts li.bad{border-color:var(--bad);background:var(--bad-bg)}.alerts li.warn{border-color:var(--warn);background:var(--warn-bg)}.alerts li.good{border-color:var(--good);background:var(--good-bg)}
+.alerts table.fix{width:auto;margin-top:6px;border-collapse:collapse;font-size:13px}.alerts table.fix th,.alerts table.fix td{padding:2px 12px 2px 0;text-align:left;border:0;white-space:nowrap}.alerts table.fix .num{text-align:right}.alerts table.fix tr.grp td{border-top:1px solid var(--line);padding-top:4px}.alerts li.bad{border-color:var(--bad);background:var(--bad-bg)}.alerts li.warn{border-color:var(--warn);background:var(--warn-bg)}.alerts li.good{border-color:var(--good);background:var(--good-bg)}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
 .chip{background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:3px 10px;font-size:12px}
 .gantt{position:relative;min-width:260px;width:35%;height:26px}
@@ -557,14 +557,21 @@ h3{font-size:13px;margin:4px 0 8px;text-transform:uppercase;letter-spacing:.04em
       const gapsOf = x => dcs.filter(dc => sizeOk(dc, x.c)).map(dc => { const pr = pricePD[x.c + '|' + dc], ref = mktRef(x.c, dc); if (!(pr > 0) || !ref) return null;
         let to = Math.round(ref * 0.97 * 20) / 20; if (x.uc != null) to = Math.max(to, Math.ceil(x.uc * 1.15 * 20) / 20);
         return { dc, pr, ref, gap: (pr - ref) / ref, sold: ourPD5[x.c + '|' + dc] || 0, to }; }).filter(g => g && g.gap > 0.08);
-      const gapTxt = (g, withSold) => `DC${g.dc} ${eur(g.pr, 2)} vs. market ${eur(g.ref, 2)} (<b>+${(g.gap * 100).toFixed(0)} %</b>${withSold ? `, sold ${int(g.sold)} in 5 d` : ''}) → try ${eur(g.to, 2)}`;
-      // 1 · in stock but priced above the market
-      const over = P.filter(x => x.s >= 1000).map(x => ({ x, g: gapsOf(x) })).filter(o => o.g.length);
-      if (over.length) { const hard = over.some(o => o.g.some(g => g.gap > 0.15 || g.sold === 0));
-        alerts.push([hard ? 'bad' : 'warn', `<b>In stock but priced above the market (VK32, latest market period):</b> ${over.map(o => `${name(o.x.c)}, ${int(o.x.s)} in stock: ${o.g.map(g => gapTxt(g, true)).join('; ')}`).join(' · ')}. Stock that does not sell earns nothing.`]); }
-      // 2 · being produced, price not ready for the shelf yet
-      const pre = P.filter(x => x.s < 1000 && x.pend > 0).map(x => ({ x, g: gapsOf(x) })).filter(o => o.g.length);
-      if (pre.length) alerts.push(['warn', `<b>Set the price before the batch reaches the shelf (VK32):</b> ${pre.map(o => `${name(o.x.c)}, ${int(o.x.pend)} in production${o.x.nextArr != null ? `, ready ~${fd(o.x.nextArr)}` : ''}: ${o.g.map(g => gapTxt(g, false)).join('; ')}`).join(' · ')}.`]);
+      // 1+2 · prices to fix: in stock (or batch coming) but priced above the market → one compact table per channel
+      const fixes = [];
+      for (const x of P) {
+        const inStock = x.s >= 1000, coming = !inStock && x.pend > 0; if (!inStock && !coming) continue;
+        for (const g of gapsOf(x)) fixes.push({ dc: g.dc, c: x.c, g, qty: inStock ? x.s : x.pend, coming, arr: x.nextArr });
+      }
+      if (fixes.length) {
+        const hard = fixes.some(f => !f.coming && (f.g.gap > 0.15 || f.g.sold === 0));
+        fixes.sort((a, b) => a.dc.localeCompare(b.dc) || a.c.localeCompare(b.c));
+        const body = fixes.map((f, i) => `<tr${i && fixes[i - 1].dc !== f.dc ? ' class="grp"' : ''}><td>${i && fixes[i - 1].dc === f.dc ? '' : `<b>DC${f.dc}</b>`}</td><td>${name(f.c)}</td>`
+          + `<td class="num"><b>${eur(f.g.to, 2)}</b></td><td class="num">${eur(f.g.ref, 2)}</td><td class="num sub">${eur(f.g.pr, 2)} <span class="neg">+${(f.g.gap * 100).toFixed(0)} %</span></td>`
+          + `<td class="num sub">${f.coming ? `${int(f.qty)} coming${f.arr != null ? ' ~' + fd(f.arr) : ''}` : `${int(f.qty)} in stock${f.g.sold ? '' : ' · 0 sold 5 d'}`}</td></tr>`).join('');
+        alerts.push([hard ? 'bad' : 'warn', `<b>Fix these prices (VK32)</b> <span class="sub">– priced more than 8 % above the market (latest market period)</span>`
+          + `<table class="fix"><thead><tr><th>Channel</th><th>Product</th><th class="num">Set to</th><th class="num">Market</th><th class="num">Now</th><th class="num">Stock</th></tr></thead><tbody>${body}</tbody></table>`]);
+      }
       // 3 · raw materials: how long the line can keep running (queue + what the free wheat/oats still allow) vs. the supplier lead time
       if (PHASE.purchasing) {
         const dayOfPO = r => n(r.GOODS_RECEIPT_STEP) ? (n(r.GOODS_RECEIPT_ROUND || r.SIM_ROUND) - 1) * CFG.ROUND_DAYS + n(r.GOODS_RECEIPT_STEP) : null;
