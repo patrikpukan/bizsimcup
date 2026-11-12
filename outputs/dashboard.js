@@ -24,6 +24,8 @@
   const CFG = {
     CAPACITY: 24000, SETUP_H: 8, RAW_LIMIT: 250000, PACK_LIMIT: 750000, FG_LIMIT: 250000, FIXED_PER_UNIT: 0.9, FIXED_MIN: 0.6, LEAD_DAYS: 5, ROUND_DAYS: 20,
     MARKET_PER_DC: { '10': 90000, '12': 360000, '14': 120000 },        // approx. € per team per week (overwritten by Current_Game_Rules)
+    TEAMS: 10,                                                         // BIZ SIM CUP 2026 live game: 10 teams (A–J, from the round results). 0 = estimate from market revenue
+    MIX_PERIODS: 3,                                                    // product mix for the demand model = latest N market periods (5 days each), not the whole game
     STORES: {                                                          // stores per region (competition round)
       '10': { North: 2, South: 7, West: 3 },
       '12': { North: 19, South: 23, West: 17 },
@@ -457,9 +459,12 @@ h3{font-size:13px;margin:4px 0 8px;text-transform:uppercase;letter-spacing:.04em
 
       // demand model (all channels – production serves every DC): per DC, market size per team (€/week) / avg price × product mix
       const dem = {};
+      const mixKeys = sortKeys(allMarket.map(mKey)).slice(-CFG.MIX_PERIODS);
+      const mixMarket = allMarket.filter(r => mixKeys.includes(mKey(r)));   // recent mix: follows shifts in what the market buys
       for (const dc of dcs) {
         let q = 0, v = 0; const byC = {};
-        for (const r of allMarket) if (dcOf(r) === dc) { const c = mcode(r); q += n(r.QUANTITY); v += n(r.NET_VALUE) || n(r.QUANTITY) * n(r.AVERAGE_PRICE); byC[c] = (byC[c] || 0) + n(r.QUANTITY); }
+        const src = mixMarket.some(r => dcOf(r) === dc) ? mixMarket : allMarket;
+        for (const r of src) if (dcOf(r) === dc) { const c = mcode(r); q += n(r.QUANTITY); v += n(r.NET_VALUE) || n(r.QUANTITY) * n(r.AVERAGE_PRICE); byC[c] = (byC[c] || 0) + n(r.QUANTITY); }
         if (!q) continue;
         const daily = (CFG.MARKET_PER_DC[dc] || 0) / 5 / (v / q);
         for (const c in byC) dem[c] = (dem[c] || 0) + daily * byC[c] / q;
@@ -469,14 +474,14 @@ h3{font-size:13px;margin:4px 0 8px;text-transform:uppercase;letter-spacing:.04em
       for (const dc of activeDCs) {
         if (allMarket.some(r => dcOf(r) === dc)) continue;
         let q = 0, v = 0; const byC = {};
-        for (const r of allMarket) { const c = mcode(r); if (!sizeOk(dc, c)) continue; q += n(r.QUANTITY); v += n(r.NET_VALUE) || n(r.QUANTITY) * n(r.AVERAGE_PRICE); byC[c] = (byC[c] || 0) + n(r.QUANTITY); }
+        for (const r of (mixMarket.length ? mixMarket : allMarket)) { const c = mcode(r); if (!sizeOk(dc, c)) continue; q += n(r.QUANTITY); v += n(r.NET_VALUE) || n(r.QUANTITY) * n(r.AVERAGE_PRICE); byC[c] = (byC[c] || 0) + n(r.QUANTITY); }
         if (!q) continue;
         const daily = (CFG.MARKET_PER_DC[dc] || 0) / 5 / (v / q);
         for (const c in byC) dem[c] = (dem[c] || 0) + daily * byC[c] / q;
       }
       const hasDem = Object.keys(dem).length > 0;
       const weekRev = {}; for (const r of market) { const k = mKey(r); weekRev[k] = (weekRev[k] || 0) + (n(r.NET_VALUE) || n(r.QUANTITY) * n(r.AVERAGE_PRICE)); }
-      const teams = Math.max(1, Math.round(Math.max(0, ...Object.values(weekRev)) / (CFG.MARKET_PER_DC[DC] || 360000)));
+      const teams = CFG.TEAMS || Math.max(1, Math.round(Math.max(0, ...Object.values(weekRev)) / (CFG.MARKET_PER_DC[DC] || 360000)));
       const prodCodes = [...new Set([...codes, ...Object.keys(dem), ...Object.keys(pending), ...Object.keys(stock).filter(c => /^F/.test(c) && stock[c] > 0)])].filter(c => /^F/.test(c)).sort();
       const recent = {}; for (const r of allSales) if (n(r.SIM_ELAPSED_STEPS) > elapsed - 5) { const c = mcode(r); recent[c] = (recent[c] || 0) + n(r.QUANTITY) / 5; }
 
@@ -711,7 +716,7 @@ h3{font-size:13px;margin:4px 0 8px;text-transform:uppercase;letter-spacing:.04em
       for (const r of market) { const k = mKey(r); wk[k] = (wk[k] || 0) + (n(r.NET_VALUE) || n(r.QUANTITY) * n(r.AVERAGE_PRICE)); }
       for (const r of sales) { const k = sKey(r); ourWk[k] = (ourWk[k] || 0) + n(r.NET_VALUE); }
       const size = CFG.MARKET_PER_DC[DC] || 360000;
-      const teamsEst = Math.max(2, Math.round(Math.max(...mKeys.map(k => wk[k] / keyDays(k) * 5)) / size));
+      const teamsEst = CFG.TEAMS || Math.max(2, Math.round(Math.max(...mKeys.map(k => wk[k] / keyDays(k) * 5)) / size));
       const rowsP = codesDC.map(c => {
         const a = comp(c, cur), b = comp(c, prev); if (!a) return '';
         const dq = b && b.qd >= 200 ? (a.qd - b.qd) / b.qd : null, dp = b && b.p && a.p ? (a.p - b.p) / b.p : null;
@@ -726,7 +731,7 @@ h3{font-size:13px;margin:4px 0 8px;text-transform:uppercase;letter-spacing:.04em
       }).join('');
       const rowsW = mKeys.map(k => { const tot = wk[k] || 0, us = ourWk[k] || 0, cmp = Math.max(0, tot - us), avg = cmp / (teamsEst - 1);
         return `<tr><td>${keyLabel(k)}${keyDays(k) < 5 ? ` <span class="sub">(${keyDays(k)} d so far)</span>` : ''}</td><td>${eurK(tot)}</td><td>${eurK(cmp)}</td><td>${eurK(avg)}</td><td>${eurK(us)}</td><td class="${us >= avg ? 'pos' : 'neg'}">${avg ? (us / avg).toFixed(2) + '×' : '–'}</td><td>${tot ? pct(us / tot) : '–'}</td></tr>`; }).join('');
-      return `<div class="card full"><h2>Competitors (${dcName(DC)}): whole market minus us <span class="sub">· about ${teamsEst} teams (market revenue ÷ ${eurK(size)} per team per week)</span></h2>
+      return `<div class="card full"><h2>Competitors (${dcName(DC)}): whole market minus us <span class="sub">· ${CFG.TEAMS ? `${teamsEst} teams` : `about ${teamsEst} teams (market revenue ÷ ${eurK(size)} per team per week)`}</span></h2>
         <div class="grid"><div><h3>By product: latest week ${keyLabel(cur)} vs ${prev ? keyLabel(prev) : '–'}</h3><div class="tbl"><table><thead><tr><th>Product</th><th>Comp. units/day</th><th>Δ units</th><th>Comp. avg price</th><th>Δ price</th><th>Our price</th><th>Us vs comp.</th><th>Our share</th><th>Signal</th></tr></thead><tbody>${rowsP}</tbody></table></div></div>
         <div><h3>By week: us vs the average competitor</h3><div class="tbl"><table><thead><tr><th>Week</th><th>Market</th><th>Competitors</th><th>Avg competitor</th><th>Us</th><th>Us ÷ avg</th><th>Our share</th></tr></thead><tbody>${rowsW}</tbody></table></div>
         <div class="note">Per-team data is not in OData (only our company + total market). “Competitors” = market − our sales. The average competitor = competitors ÷ (teams − 1). Us ÷ avg above 1.0 means we beat the average team. Competitor volumes falling while their price rises usually means they are out of stock, so that is the moment to raise price or produce that product. The current week is normalised per day.</div></div></div></div>`;
