@@ -796,10 +796,11 @@ h3{font-size:13px;margin:4px 0 8px;text-transform:uppercase;letter-spacing:.04em
       const openPO = {}, lead = {};
       const poRows = pos.slice(0, 20).map(r => {
         const m = code(r.MATERIAL_NUMBER), ord = n(r.SIM_ELAPSED_STEPS), rec = n(r.GOODS_RECEIPT_STEP) ? gday(r.GOODS_RECEIPT_ROUND, r.GOODS_RECEIPT_STEP) : null;
-        return `<tr><td>${r.PURCHASING_ORDER}</td><td>${name(m)}</td><td>${r.VENDOR || ''}</td><td>${int(r.QUANTITY)}</td><td>${eur(r.UNIT_PRICE, 2)}</td><td>${fd(ord)}</td><td>${rec ? fd(rec) : `<span class="tag warn">open · expected ${fd(ord + 1)}–${fd(ord + CFG.LEAD_DAYS).replace('day ', '')}</span>`}</td><td>${rec ? (rec - ord) + ' d' : '–'}</td></tr>`;
+        return `<tr><td>${r.PURCHASING_ORDER}</td><td>${name(m)}</td><td>${r.VENDOR || ''}</td><td>${int(r.QUANTITY)}</td><td>${eur(r.UNIT_PRICE, 2)}</td><td>${fd(ord)}</td><td>${/expected/i.test(r.STATUS || '') || (rec && rec > elapsed) ? `<span class="tag warn">open · expected ${rec ? fd(rec) : fd(ord + 1) + '–' + fd(ord + CFG.LEAD_DAYS).replace('day ', '')}</span>` : rec ? fd(rec) : `<span class="tag warn">open · expected ${fd(ord + 1)}–${fd(ord + CFG.LEAD_DAYS).replace('day ', '')}</span>`}</td><td>${rec ? (rec - ord) + ' d' : '–'}</td></tr>`;
       }).join('');
       for (const r of pos) { const m = code(r.MATERIAL_NUMBER), ord = n(r.SIM_ELAPSED_STEPS), rec = n(r.GOODS_RECEIPT_STEP) ? gday(r.GOODS_RECEIPT_ROUND, r.GOODS_RECEIPT_STEP) : null;
-        if (!rec) openPO[m] = (openPO[m] || 0) + n(r.QUANTITY); else { const v = r.VENDOR || '?'; (lead[v] = lead[v] || []).push(rec - ord); } }
+        const isOpen = /expected/i.test(r.STATUS || '') || !rec || rec > elapsed;   // SAP fills the planned receipt date already at order creation
+        if (isOpen) openPO[m] = (openPO[m] || 0) + n(r.QUANTITY); else { const v = r.VENDOR || '?'; (lead[v] = lead[v] || []).push(rec - ord); } }
       const leadTxt = Object.entries(lead).map(([v, a]) => `${v}: ${(a.reduce((x, y) => x + y, 0) / a.length).toFixed(1)} d avg`).join(' · ');
       const mats = Object.keys(stock).filter(c => /^[RP]/.test(c)).sort();
       const rawRows = mats.map(m => { const s = stock[m] || 0, res = reserved[m] || 0, free = s - res;
